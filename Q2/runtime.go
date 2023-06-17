@@ -23,6 +23,40 @@ func main() {
 	}
 }
 
+func ControlGroup(limit int) {
+	cgPath := filepath.Join("/sys/fs/cgroup/memory", "limit-memory")
+	os.Mkdir(cgPath, 0755)
+	ioutil.WriteFile(filepath.Join(cgPath, "memory.limit_in_bytes"), []byte(strconv.Itoa(limit * 1000000)), 0700)
+	ioutil.WriteFile(filepath.Join(cgPath, "memory.swappiness"), []byte("0"), 0700)
+	ioutil.WriteFile(filepath.Join(cgPath, "tasks"), []byte(strconv.Itoa(os.Getpid())), 0700)
+}
+
+func child() {
+	
+	hostname := os.Args[2]
+	
+	if len(os.Args) > 3 {
+		limit, _ := strconv.Atoi(os.Args[3])
+		ControlGroup(limit)
+	}
+	
+	dir, _ := os.Getwd()
+	root := filepath.Join(dir, "Containers", hostname)
+	
+	syscall.Sethostname([]byte(hostname))
+	syscall.Chroot(root)
+	syscall.Chdir("/")
+	syscall.Mount("proc", "proc", "proc", 0, "")
+
+	cmd := exec.Command("/bin/bash")
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
+	
+	syscall.Unmount("/proc", 0)
+}
+
 func run() {
 	
 	// create container foledr
@@ -56,37 +90,5 @@ func run() {
 	}
 }
 
-func child() {
-	
-	hostname := os.Args[2]
-	
-	if len(os.Args) > 3 {
-		limit, _ := strconv.Atoi(os.Args[3])
-		ControlGroup(limit)
-	}
-	
-	dir, _ := os.Getwd()
-	root := filepath.Join(dir, "Containers", hostname)
-	
-	syscall.Sethostname([]byte(hostname))
-	syscall.Chroot(root)
-	syscall.Chdir("/")
-	syscall.Mount("proc", "proc", "proc", 0, "")
 
-	cmd := exec.Command("/bin/bash")
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Run()
-	
-	syscall.Unmount("/proc", 0)
-}
-
-func ControlGroup(limit int) {
-	cgPath := filepath.Join("/sys/fs/cgroup/memory", "limit-memory")
-	os.Mkdir(cgPath, 0755)
-	ioutil.WriteFile(filepath.Join(cgPath, "memory.limit_in_bytes"), []byte(strconv.Itoa(limit * 1000000)), 0700)
-	ioutil.WriteFile(filepath.Join(cgPath, "memory.swappiness"), []byte("0"), 0700)
-	ioutil.WriteFile(filepath.Join(cgPath, "tasks"), []byte(strconv.Itoa(os.Getpid())), 0700)
-}
 
