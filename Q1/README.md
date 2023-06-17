@@ -24,4 +24,4 @@ This part is similar to part2 just we should add the first rout command in serve
 
 addintionally change the node1 and node2 default to first server'ip and the other two to second server'ip and add this rout command in first server and similar one to second:
 
-sudo ip route add 10.10.0.0/24 via <ip-server2>
+sudo ip route add 10.10.0.0/24 via <ip-server2> .
