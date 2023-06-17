@@ -14,6 +14,7 @@ sudo ip route add 172.0.0.0/24 dev br1
 
 sudo ip route add 10.10.0.0/24 dev br2
 
+
 PART3:
 
 This part is similar to part2 just we should add the first rout command in server 1 and the second in server 2.
