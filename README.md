@@ -1,6 +1,5 @@
 # SDMN-Spring2023
-SDMN-HW2
 
-Docker and containers
+Docker and containers implementation task
 
-Pouria Dadkhah 401201381
+Pouria Dadkhah
