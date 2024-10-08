@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<flow xmlns="urn:opendaylight:flow:inventory">
+	<priority>32768</priority>
+	<flow-name>ManualFlow</flow-name>
+	<table_id>0</table_id>
+	<instructions>
+		<instruction>
+			<order>0</order>
+			<apply-actions>
+				<action>
+					<order>0</order>
+					<output-action>
+						<max-length>0</max-length>
+						<output-node-connector>4</output-node-connector>
+					</output-action>
+				</action>
+			</apply-actions>
+		</instruction>
+	</instructions>
+	<id>1</id>
+	<match>
+		<in-port>1</in-port>
+	</match>
+</flow>
